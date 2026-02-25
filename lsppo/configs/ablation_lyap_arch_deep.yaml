@@ -1,0 +1,2 @@
+base_config: default.yaml
+lyap_hidden_sizes: [128, 128, 128]

@@ -1,0 +1,2 @@
+base_config: default.yaml
+cost_limit: 1.0

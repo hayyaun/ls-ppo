@@ -1,0 +1,2 @@
+base_config: default.yaml
+lyap_loss_weight: 0.0

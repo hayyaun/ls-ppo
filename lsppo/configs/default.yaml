@@ -1,0 +1,48 @@
+env: PointGoalSafe-v0
+env_kwargs: {}
+seed: 0
+n_envs: 8
+steps_per_env: 256
+mini_batch_size: 64
+epochs: 10
+lr_actor: 3e-4
+lr_critic: 1e-3
+lr_lyap: 1e-3
+gamma: 0.99
+gae_lambda: 0.95
+clip_eps: 0.2
+vf_coef: 0.5
+ent_coef: 0.01
+max_grad_norm: 0.5
+lam_lr: 1e-3
+lambda_update_every: 1
+cost_limit: 5.0
+lambda_init: 0.0
+lambda_max: 100.0
+lyap_loss_weight: 1.0
+lyap_weight_schedule: constant
+lyap_warmup_updates: 50
+lyap_td_weight: 1.0
+lyap_decrease_weight: 1.0
+lyap_margin: 0.01
+lyap_objective: both
+projection: true
+projection_method: finite_diff
+projection_epsilon: 0.01
+finite_diff_eps: 0.001
+action_low: -1.0
+action_high: 1.0
+actor_hidden_sizes: [128, 128]
+critic_hidden_sizes: [128, 128]
+lyap_hidden_sizes: [64, 64]
+deterministic_torch: true
+device: auto
+total_env_steps: 1000000
+checkpoint_interval: 50000
+eval_interval: 50000
+episodes_per_eval: 20
+seeds_for_report: [0, 1, 2, 3, 4]
+quick_test_steps: 1000
+log_wandb: false
+wandb_project: lsppo
+wandb_entity: null

@@ -1,0 +1,12 @@
+torch>=1.12
+numpy>=1.23
+gymnasium>=0.28
+matplotlib>=3.5
+tensorboard>=2.9
+pyyaml
+scipy
+pandas
+scikit-learn
+cvxpy      # optional; projection fallback
+tqdm
+seaborn

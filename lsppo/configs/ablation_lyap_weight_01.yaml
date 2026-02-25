@@ -1,0 +1,3 @@
+base_config: default.yaml
+lyap_loss_weight: 0.1
+lyap_weight_schedule: linear_warmup
