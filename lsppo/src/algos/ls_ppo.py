@@ -31,13 +31,25 @@ class LSPPOConfig:
 
 
 def estimate_empirical_discounted_cost(costs: np.ndarray, done: np.ndarray, gamma: float) -> float:
-    """Estimate C_empirical from rollout buffer."""
-    discounted = np.zeros_like(costs, dtype=np.float32)
-    running = np.zeros(costs.shape[1], dtype=np.float32)
-    for t in reversed(range(costs.shape[0])):
-        running = costs[t] + gamma * running * (1.0 - done[t])
-        discounted[t] = running
-    return float(discounted[0].mean())
+    """Estimate C_empirical as mean episodic discounted cost over completed episodes."""
+    t_horizon, n_envs = costs.shape
+    episodes: list[float] = []
+    running_cost = np.zeros(n_envs, dtype=np.float32)
+    running_discount = np.ones(n_envs, dtype=np.float32)
+
+    for t in range(t_horizon):
+        running_cost += running_discount * costs[t]
+        running_discount *= gamma
+        done_mask = done[t] > 0.5
+        if np.any(done_mask):
+            episodes.extend(running_cost[done_mask].tolist())
+            running_cost[done_mask] = 0.0
+            running_discount[done_mask] = 1.0
+
+    # Fallback to partial episode estimate when no episode terminated in this batch.
+    if episodes:
+        return float(np.mean(episodes))
+    return float(np.mean(running_cost))
 
 
 class LSPPOCoordinator:

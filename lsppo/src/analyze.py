@@ -39,10 +39,19 @@ def load_metrics(logdir: Path) -> pd.DataFrame:
         algo = "unknown"
         env_name = "unknown"
         seed = 0
+        variant = "default"
         if rel != Path(".") and len(rel.parts) >= 4:
             algo, env_name, seed_dir = rel.parts[0], rel.parts[1], rel.parts[2]
             if seed_dir.startswith("seed_"):
                 seed = int(seed_dir.replace("seed_", ""))
+            # Optional ablation layout: logs/ablations/{variant}/{env}/seed_k
+            if len(rel.parts) >= 5 and rel.parts[0] == "ablations":
+                variant = rel.parts[1]
+                env_name = rel.parts[2]
+                seed_dir = rel.parts[3]
+                if seed_dir.startswith("seed_"):
+                    seed = int(seed_dir.replace("seed_", ""))
+                algo = "ls_ppo"
         with path.open("r", encoding="utf-8") as fh:
             for line in fh:
                 text = line.strip()
@@ -52,6 +61,7 @@ def load_metrics(logdir: Path) -> pd.DataFrame:
                 item.setdefault("algo", algo)
                 item.setdefault("env", env_name)
                 item.setdefault("seed", seed)
+                item.setdefault("variant", variant)
                 rows.append(item)
     return pd.DataFrame(rows)
 
@@ -185,8 +195,12 @@ def main() -> None:
     results_csv.parent.mkdir(parents=True, exist_ok=True)
     final.to_csv(results_csv, index=False)
 
-    plt.figure(figsize=(9, 5))
-    sns.barplot(data=final, x="algo", y="return", hue="env", errorbar=("ci", 95))
+    if "variant" not in final.columns:
+        final["variant"] = final["algo"]
+    final["variant_plot"] = final["algo"] + ":" + final["variant"].astype(str)
+
+    plt.figure(figsize=(10, 5))
+    sns.barplot(data=final, x="variant_plot", y="return", hue="env", errorbar=("ci", 95))
     plt.ylabel("Return (final)")
     plt.xlabel("Variant")
     plt.xticks(rotation=25, ha="right")
@@ -194,8 +208,8 @@ def main() -> None:
     plt.savefig(figdir / "LS-PPO_fig3_ablation_return_bar.png", dpi=300)
     plt.close()
 
-    plt.figure(figsize=(9, 5))
-    sns.barplot(data=final, x="algo", y="discounted_cost", hue="env", errorbar=("ci", 95))
+    plt.figure(figsize=(10, 5))
+    sns.barplot(data=final, x="variant_plot", y="discounted_cost", hue="env", errorbar=("ci", 95))
     plt.ylabel("Discounted cost (final)")
     plt.xlabel("Variant")
     plt.xticks(rotation=25, ha="right")

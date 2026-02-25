@@ -102,6 +102,28 @@ Figure placeholders:
 
 Main results table: `paper/LS-PPO_table1_main_results.md`.
 
+LaTeX-ready table stub:
+
+```latex
+\begin{table}[t]
+\centering
+\caption{Main performance and safety comparison across baselines and LS-PPO.}
+\label{tab:main_results}
+\begin{tabular}{l l c c c}
+\hline
+Algorithm & Environment & Return ($\mu\pm\sigma$) & Discounted Cost ($\mu\pm\sigma$) & Violation Rate \\
+\hline
+PPO & PointGoalSafe-v0 & TODO & TODO & TODO \\
+PPO-Lagrangian & PointGoalSafe-v0 & TODO & TODO & TODO \\
+LS-PPO & PointGoalSafe-v0 & TODO & TODO & TODO \\
+PPO & CarGoalSafe-v0 & TODO & TODO & TODO \\
+PPO-Lagrangian & CarGoalSafe-v0 & TODO & TODO & TODO \\
+LS-PPO & CarGoalSafe-v0 & TODO & TODO & TODO \\
+\hline
+\end{tabular}
+\end{table}
+```
+
 Example interpretation template (replace with measured values):
 - LS-PPO improves constraint satisfaction with modest reward trade-off relative to PPO.
 - LS-PPO reduces violation rate relative to PPO-Lagrangian under tighter cost limits.
@@ -114,6 +136,32 @@ Use the ablation matrix in `LS-PPO_Implementation.md` and report:
 - violation rate,
 - p-value vs LS-PPO default,
 - effect size (Cohen's d).
+
+LaTeX-ready ablation table stub:
+
+```latex
+\begin{table}[t]
+\centering
+\caption{Ablation study of LS-PPO components and hyperparameters.}
+\label{tab:ablation}
+\begin{tabular}{l c c c c l}
+\hline
+Ablation & Return ($\mu\pm\sigma$) & Cost ($\mu\pm\sigma$) & Violation Rate & p-value vs default & Notes \\
+\hline
+Projection OFF & TODO & TODO & TODO & TODO & TODO \\
+Lyap weight 0.0 & TODO & TODO & TODO & TODO & TODO \\
+Lyap weight 0.1 & TODO & TODO & TODO & TODO & TODO \\
+Lyap weight 10.0 & TODO & TODO & TODO & TODO & TODO \\
+Projection Jacobian & TODO & TODO & TODO & TODO & TODO \\
+Projection QP & TODO & TODO & TODO & TODO & TODO \\
+Deep Lyap net & TODO & TODO & TODO & TODO & TODO \\
+Aggressive lambda & TODO & TODO & TODO & TODO & TODO \\
+Cost limit d=1 & TODO & TODO & TODO & TODO & TODO \\
+Cost limit d=3 & TODO & TODO & TODO & TODO & TODO \\
+\hline
+\end{tabular}
+\end{table}
+```
 
 ## 7. Limitations and Broader Impact
 

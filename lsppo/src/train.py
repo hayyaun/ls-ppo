@@ -49,6 +49,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--quick_test", type=str, default="false")
     parser.add_argument("--resume", type=str, default="")
     parser.add_argument("--device", type=str, default=None)
+    parser.add_argument("--variant", type=str, default="")
     return parser.parse_args()
 
 
@@ -127,6 +128,8 @@ def main() -> None:
         cfg["env"] = args.env
     if args.device is not None:
         cfg["device"] = args.device
+    if args.variant:
+        cfg["variant_name"] = args.variant
     quick_test = str2bool(args.quick_test)
 
     seed = int(cfg["seed"])
@@ -411,6 +414,7 @@ def main() -> None:
             "seed": seed,
             "update": update_idx,
             "env_steps": env_steps,
+            "variant": str(cfg.get("variant_name", "default")),
             "episode_return_mean": safe_mean(ep_returns_window),
             "episode_discounted_cost_mean": safe_mean(ep_costs_window),
             "episode_violation_rate_mean": safe_mean(ep_violation_window),

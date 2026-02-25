@@ -32,6 +32,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--save_trajectory_csv", type=str, default="")
     parser.add_argument("--env", type=str, default=None)
     parser.add_argument("--device", type=str, default=None)
+    parser.add_argument("--variant", type=str, default="")
     return parser.parse_args()
 
 
@@ -145,6 +146,7 @@ def main() -> None:
     summary = {
         "algo": args.algo,
         "env": str(cfg["env"]),
+        "variant": args.variant or str(cfg.get("variant_name", "default")),
         "episodes": episodes,
         "seed": args.seed,
         "mean_return": float(np.mean(returns)),

@@ -56,18 +56,58 @@ python -m src.train --config configs/default.yaml --algo ppo_lagrangian --logdir
 python -m src.train --config configs/default.yaml --algo ls_ppo --logdir experiments/logs/ls_ppo/PointGoalSafe-v0/seed_0
 ```
 
+## 3.1) Ablation commands (single-run examples)
+
+```bash
+# 1) Projection ON/OFF
+python -m src.train --config configs/default.yaml --algo ls_ppo --variant proj_on --logdir experiments/logs/ablations/proj_on/PointGoalSafe-v0/seed_0
+python -m src.train --config configs/ablation_proj_off.yaml --algo ls_ppo --variant proj_off --logdir experiments/logs/ablations/proj_off/PointGoalSafe-v0/seed_0
+
+# 2) Lyapunov loss weight
+python -m src.train --config configs/ablation_lyap_weight_0.yaml --algo ls_ppo --variant lyap_w0 --logdir experiments/logs/ablations/lyap_w0/PointGoalSafe-v0/seed_0
+python -m src.train --config configs/ablation_lyap_weight_01.yaml --algo ls_ppo --variant lyap_w01 --logdir experiments/logs/ablations/lyap_w01/PointGoalSafe-v0/seed_0
+python -m src.train --config configs/default.yaml --algo ls_ppo --variant lyap_w1 --logdir experiments/logs/ablations/lyap_w1/PointGoalSafe-v0/seed_0
+python -m src.train --config configs/ablation_lyap_weight_10.yaml --algo ls_ppo --variant lyap_w10 --logdir experiments/logs/ablations/lyap_w10/PointGoalSafe-v0/seed_0
+
+# 3) Projection method
+python -m src.train --config configs/default.yaml --algo ls_ppo --variant proj_finite_diff --logdir experiments/logs/ablations/proj_finite_diff/PointGoalSafe-v0/seed_0
+python -m src.train --config configs/ablation_projection_jacobian.yaml --algo ls_ppo --variant proj_jacobian --logdir experiments/logs/ablations/proj_jacobian/PointGoalSafe-v0/seed_0
+python -m src.train --config configs/ablation_projection_qp.yaml --algo ls_ppo --variant proj_qp --logdir experiments/logs/ablations/proj_qp/PointGoalSafe-v0/seed_0
+
+# 4) Lyapunov architecture
+python -m src.train --config configs/default.yaml --algo ls_ppo --variant lyap_arch_small --logdir experiments/logs/ablations/lyap_arch_small/PointGoalSafe-v0/seed_0
+python -m src.train --config configs/ablation_lyap_arch_deep.yaml --algo ls_ppo --variant lyap_arch_deep --logdir experiments/logs/ablations/lyap_arch_deep/PointGoalSafe-v0/seed_0
+
+# 5) Lagrangian update aggressiveness
+python -m src.train --config configs/default.yaml --algo ls_ppo --variant lambda_default --logdir experiments/logs/ablations/lambda_default/PointGoalSafe-v0/seed_0
+python -m src.train --config configs/ablation_lambda_aggressive.yaml --algo ls_ppo --variant lambda_aggressive --logdir experiments/logs/ablations/lambda_aggressive/PointGoalSafe-v0/seed_0
+
+# 6) Cost limit d
+python -m src.train --config configs/ablation_cost_limit_1.yaml --algo ls_ppo --variant cost_d1 --logdir experiments/logs/ablations/cost_d1/PointGoalSafe-v0/seed_0
+python -m src.train --config configs/ablation_cost_limit_3.yaml --algo ls_ppo --variant cost_d3 --logdir experiments/logs/ablations/cost_d3/PointGoalSafe-v0/seed_0
+python -m src.train --config configs/default.yaml --algo ls_ppo --variant cost_d5 --logdir experiments/logs/ablations/cost_d5/PointGoalSafe-v0/seed_0
+```
+
 ## 4) Full experiment launcher
 
 ```bash
 bash run_experiments.sh configs/default.yaml experiments/logs experiments/results
 ```
 
+## 4.1) Full ablation launcher
+
+```bash
+bash run_ablations.sh experiments/logs/ablations experiments/results/ablations
+```
+
 ## 5) Evaluate and aggregate
 
 ```bash
 python -m src.eval --config configs/default.yaml --algo ls_ppo --checkpoint experiments/logs/ls_ppo/PointGoalSafe-v0/seed_0/checkpoints/latest.pt --out experiments/results/ls_ppo_point_seed0_eval.json
-python -m src.collect_results --log_root experiments/logs --out_csv experiments/results/main_results.csv
+python -m src.collect_results --log_root experiments/logs --eval_root experiments/results --out_csv experiments/results/main_results.csv
+python -m src.collect_results --log_root experiments/logs/ablations --eval_root experiments/results/ablations --out_csv experiments/results/ablations/ablation_results.csv
 python -m src.analyze --logdir experiments/logs --figdir paper --results_csv experiments/results/main_results.csv
+python -m src.analyze --logdir experiments/logs/ablations --figdir paper --results_csv experiments/results/ablations/ablation_results.csv
 ```
 
 ## 6) Logging layout
@@ -93,6 +133,13 @@ Recommended run path:
 
 - Projection relies on local model linearization; mismatch between true and approximate dynamics can reduce projection accuracy.
 - CPO is not included in this codebase to keep dependencies minimal and deterministic. Comparison is made to PPO and PPO-Lagrangian.
+
+## 8.1) Compute budget guidance
+
+For the full matrix (`2 envs * 3 algos * 5 seeds = 30 runs`) at 1M steps/run:
+- CPU-only (single worker): roughly 45-120 hours total.
+- CPU-only (4-way parallel): roughly 12-30 hours total.
+- GPU-assisted policy updates: roughly 8-20 hours total.
 
 ## 9) Type-check gate (project policy compliance)
 
