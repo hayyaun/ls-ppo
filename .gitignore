@@ -1,0 +1,67 @@
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.python-version
+
+# --- Virtual environments ---
+.venv/
+.venv-test/
+venv/
+env/
+ENV/
+
+# --- Test / coverage artifacts ---
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.hypothesis/
+.tox/
+.nox/
+
+# --- Build / packaging ---
+build/
+dist/
+site/
+.eggs/
+*.egg-info/
+pip-wheel-metadata/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Local env / secrets ---
+.env
+.env.*
+!.env.example
+
+# --- ML experiment artifacts ---
+wandb/
+lsppo/wandb/
+
+lsppo/experiments/logs/*
+!lsppo/experiments/logs/.gitkeep
+
+lsppo/experiments/results/*
+!lsppo/experiments/results/.gitkeep
+
+lsppo/**/checkpoints/
+lsppo/**/events.out.tfevents*
+lsppo/**/train.out
+lsppo/**/metrics.jsonl
+lsppo/**/eval_summary.json
+lsppo/**/*.pt
+
+# --- Generated analysis / paper outputs ---
+lsppo/paper/LS-PPO_fig*.png
+lsppo/paper/pairwise_stats.csv

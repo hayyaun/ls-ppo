@@ -154,3 +154,21 @@ else
   echo "tsc gate: N/A (no TypeScript files detected)"
 fi
 ```
+
+## 10) Test suite and coverage (run only in approved environment)
+
+This repository includes `pytest` tests under `tests/` and a coverage gate in `pytest.ini`:
+- minimum coverage: `50%` (`--cov-fail-under=50`)
+- measured package: `src/`
+
+Run only when you are on an approved machine/environment:
+
+```bash
+pytest
+```
+
+If you prefer explicit coverage output:
+
+```bash
+pytest --cov=src --cov-report=term-missing --cov-fail-under=50
+```
